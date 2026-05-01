@@ -1,15 +1,30 @@
+"use client";
+
 import { useState } from 'react';
 
 export default function ContactSection() {
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // In a real app, you would send this to a service like Formspree.io
-    // Example: action="https://formspree.io/f/your-id"
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+
+  const response = await fetch("https://formspree.io/f/mjglkeop", {
+    method: "POST",
+    body: formData,
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  if (response.ok) {
     setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 5000);
-  };
+    e.target.reset();
+  } else {
+    alert("Something went wrong. Try again.");
+  }
+};
 
   return (
     <section id="contact" style={{ padding: '80px 40px', position: 'relative', overflow: 'hidden' }}>
@@ -43,32 +58,73 @@ export default function ContactSection() {
               <p style={{ color: 'rgba(255,255,255,0.5)' }}>Thanks for reaching out. I&apos;ll get back to you faster than a viral trend peaks. ✨</p>
             </div>
           ) : (
-            <form style={{ display: 'flex', flexDirection: 'column', gap: 24 }} onSubmit={handleSubmit}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <label className="font-mono" style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Full Name</label>
-                  <input type="text" className="input-field" placeholder="John Doe" required />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <label className="font-mono" style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Email</label>
-                  <input type="email" className="input-field" placeholder="john@example.com" required />
-                </div>
-              </div>
-              
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label className="font-mono" style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Subject</label>
-                <input type="text" className="input-field" placeholder="Project Inquiry" required />
-              </div>
+        
+           <form 
+  onSubmit={handleSubmit}
+  style={{ display: 'flex', flexDirection: 'column', gap: 24 }}
+>
+  
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <label className="font-mono" style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
+        Full Name
+      </label>
+      <input 
+        type="text" 
+        name="name"
+        className="input-field" 
+        placeholder="John Doe" 
+        required 
+      />
+    </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <label className="font-mono" style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>Message</label>
-                <textarea className="input-field" rows="5" placeholder="Tell me about your project..." required></textarea>
-              </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <label className="font-mono" style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
+        Email
+      </label>
+      <input 
+        type="email" 
+        name="email"
+        className="input-field" 
+        placeholder="john@example.com" 
+        required 
+      />
+    </div>
+  </div>
 
-              <button type="submit" className="btn-solid" style={{ width: '100%', padding: '18px' }}>
-                Send Message ✨
-              </button>
-            </form>
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <label className="font-mono" style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
+      Subject
+    </label>
+    <input 
+      type="text" 
+      name="subject"
+      className="input-field" 
+      placeholder="Project Inquiry" 
+      required 
+    />
+  </div>
+
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <label className="font-mono" style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase' }}>
+      Message
+    </label>
+    <textarea 
+      name="message"
+      className="input-field" 
+      rows="5" 
+      placeholder="Tell me about your project..." 
+      required 
+    ></textarea>
+  </div>
+
+  {/* Optional redirect after submit */}
+  {/* <input type="hidden" name="_next" value="https://yourwebsite.com/thank-you" /> */}
+
+  <button type="submit" className="btn-solid" style={{ width: '100%', padding: '18px' }}>
+    Send Message ✨
+  </button>
+</form>
           )}
         </div>
       </div>
