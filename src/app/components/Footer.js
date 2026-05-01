@@ -8,12 +8,14 @@ export default function Footer() {
           ghanishtha<span style={{ color: 'var(--neon-cyan)' }}>.</span>
         </div>
 
-        <div style={{ display: 'flex', gap: 24 }}>
+        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
           {[
-            { name: 'LinkedIn', url: 'https://www.linkedin.com/in/ghanishtha-kapoor' },
-            { name: 'Instagram', url: 'https://www.instagram.com/ghanishtha.kapoor.12?igsh=MWNmeW90eG5rZHc5cQ%3D%3D&utm_source=qr' }
-          ].map(social => (
-            <a key={social.name} href={social.url} target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.3)', textDecoration: 'none', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em' }} className="hover-link">{social.name}</a>
+            { name: 'Email', url: 'mailto:kapoorghanishtha2005@gmail.com', type: 'email' },
+            { name: 'Phone', url: 'tel:+91-8837827095', type: 'phone' },
+            { name: 'LinkedIn', url: 'https://www.linkedin.com/in/ghanishtha-kapoor', type: 'social' },
+            { name: 'Instagram', url: 'https://www.instagram.com/ghanishtha.kapoor.12?igsh=MWNmeW90eG5rZHc5cQ%3D%3D&utm_source=qr', type: 'social' }
+          ].map(contact => (
+            <a key={contact.name} href={contact.url} target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(255,255,255,0.3)', textDecoration: 'none', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', transition: 'color 0.3s ease' }} onMouseEnter={(e) => e.target.style.color = 'var(--neon-cyan)'} onMouseLeave={(e) => e.target.style.color = 'rgba(255,255,255,0.3)'}>{contact.name}</a>
           ))}
         </div>
 

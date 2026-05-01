@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --neon-pink: #ff2d78;
@@ -257,6 +255,268 @@ body::before {
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive overrides for current inline-styled UI */
+@media (max-width: 1024px) {
+  body { overflow-x: hidden; }
+
+  .navbar {
+    padding: 16px 20px !important;
+  }
+  .navbar > div {
+    max-width: 100% !important;
+    padding: 0 16px !important;
+    flex-wrap: wrap !important;
+    gap: 14px !important;
+  }
+  .navbar .desktop-nav {
+    gap: 18px !important;
+  }
+  .navbar .desktop-nav a,
+  .navbar .desktop-nav .btn-neon {
+    font-size: 0.8rem !important;
+  }
+
+  #hero {
+    padding: 60px 20px 40px !important;
+    min-height: auto !important;
+  }
+  #hero > div:first-child {
+    max-width: 100% !important;
+  }
+  #hero .orb-cyan {
+    width: 420px !important;
+    height: 420px !important;
+    top: -15% !important;
+    right: -12% !important;
+  }
+  #hero .orb-pink {
+    width: 340px !important;
+    height: 340px !important;
+    bottom: 2% !important;
+    left: -12% !important;
+  }
+  #hero .orb-purple {
+    width: 280px !important;
+    height: 280px !important;
+    top: 38% !important;
+    left: 45% !important;
+  }
+
+  #about {
+    padding: 50px 20px !important;
+  }
+  #about > div {
+    max-width: 100% !important;
+  }
+  #about > div > div:first-child {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+    display: block !important;
+  }
+
+  #skills {
+    padding: 50px 20px !important;
+  }
+  #skills > div {
+    max-width: 100% !important;
+  }
+  #skills > div > div {
+    gap: 24px !important;
+  }
+  #skills .glass-card {
+    padding: 28px !important;
+  }
+  #skills .animate-marquee {
+    display: none !important;
+  }
+
+  #projects {
+    padding: 50px 20px !important;
+  }
+  #projects > div {
+    max-width: 100% !important;
+  }
+  #projects .glass-card {
+    grid-template-columns: 1fr !important;
+    min-height: auto !important;
+  }
+  #projects .glass-card > div:nth-child(2) {
+    padding: 32px !important;
+  }
+
+  #strategy {
+    padding: 50px 20px !important;
+  }
+  #strategy .glass-card {
+    padding: 32px !important;
+  }
+  #strategy .glass-card > div {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  #experience {
+    padding: 50px 20px !important;
+  }
+  #experience .glass-card {
+    padding: 32px !important;
+  }
+  #experience .animate-fade-up {
+    padding-left: 16px !important;
+  }
+
+  #contact {
+    padding: 50px 20px !important;
+  }
+  #contact > div {
+    max-width: 100% !important;
+    gap: 48px !important;
+  }
+  #contact .glass-card {
+    padding: 32px !important;
+  }
+  #contact form > div {
+    grid-template-columns: 1fr !important;
+  }
+  #contact .social-icon {
+    width: 44px !important;
+    height: 44px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar .desktop-nav { display: none !important; }
+  .navbar .mobile-toggle { display: block !important; }
+
+  #hero {
+    padding: 50px 14px 1630px !important;
+  }
+  #hero > div:last-child {
+    max-width: 100% !important;
+  }
+  #hero h1 {
+    font-size: clamp(2rem, 6vw, 3.5rem) !important;
+    margin-bottom: 16px !important;
+  }
+  #hero .font-mono {
+    font-size: clamp(0.85rem, 1.8vw, 1rem) !important;
+    margin-bottom: 20px !important;
+  }
+  #hero > div:last-child > div:nth-child(5) {
+    font-size: clamp(0.85rem, 1.3vw, 0.95rem) !important;
+    max-width: 95vw !important;
+    margin: 0 auto 32px !important;
+  }
+  #hero .status-badge {
+    width: fit-content !important;
+    justify-content: center !important;
+    margin: 0 auto 24px !important;
+  }
+  #hero > div:last-child > div:nth-child(7) {
+    gap: 12px !important;
+    margin-top: 60px !important;
+  }
+
+  #about {
+    padding: 45px 16px !important;
+  }
+  #about > div > div:first-child {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  #skills {
+    padding: 45px 16px !important;
+  }
+  #projects {
+    padding: 45px 16px !important;
+  }
+  #strategy {
+    padding: 45px 16px !important;
+  }
+  #experience {
+    padding: 45px 16px !important;
+  }
+  #contact {
+    padding: 45px 16px !important;
+  }
+
+  footer {
+    padding: 24px 16px !important;
+  }
+  footer > div {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  #hero {
+    padding: 40px 12px 30px !important;
+  }
+  #hero h1 {
+    font-size: clamp(1.8rem, 5vw, 2.8rem) !important;
+    margin-bottom: 12px !important;
+    letter-spacing: -0.02em !important;
+  }
+  #hero p.font-mono:nth-of-type(1) {
+    margin-bottom: 12px !important;
+  }
+  #hero .font-mono {
+    font-size: clamp(0.75rem, 1.5vw, 0.9rem) !important;
+    margin-bottom: 16px !important;
+  }
+  #hero > div:last-child > div:nth-child(5) {
+    font-size: clamp(0.8rem, 1.2vw, 0.9rem) !important;
+    line-height: 1.5 !important;
+    max-width: 100% !important;
+    margin: 0 12px 24px !important;
+  }
+  #hero .orb-cyan,
+  #hero .orb-pink,
+  #hero .orb-purple {
+    display: none !important;
+  }
+  #hero > div:last-child > div:nth-child(7) {
+    gap: 10px !important;
+    margin-top: 40px !important;
+  }
+  #hero .btn-solid,
+  #hero .btn-neon {
+    font-size: 0.8rem !important;
+    padding: 12px 24px !important;
+  }
+
+  #about > div > div:first-child {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  #skills > div > div {
+    gap: 20px !important;
+  }
+
+  #projects .glass-card > div:nth-child(2) {
+    padding: 24px !important;
+  }
+  #projects .glass-card { gap: 0 !important; }
+
+  #strategy .glass-card {
+    padding: 24px !important;
+  }
+
+  #contact .glass-card {
+    padding: 24px !important;
+  }
+  #contact h2 {
+    font-size: clamp(2rem, 8vw, 3rem) !important;
+  }
+  #contact p {
+    max-width: 100% !important;
+  }
 }
 
 @keyframes fadeInLeft {
