@@ -1,134 +1,159 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { siteConfig } from '@/data/portfolio';
+import IllustrationFreelancing from './illustrations/IllustrationFreelancing';
+import IllustrationScript from './illustrations/IllustrationScript';
+import IllustrationRelatable from './illustrations/IllustrationRelatable';
+
+const illus = { freelancing: IllustrationFreelancing, script: IllustrationScript, relatable: IllustrationRelatable };
+
+function PhoneFrame({ illustrationKey, rotation = 0, style = {} }) {
+  const Illus = illus[illustrationKey] || IllustrationFreelancing;
+  return (
+    <div style={{
+      width: 160,
+      aspectRatio: '9/16',
+      borderRadius: 24,
+      border: '2px solid #111',
+      overflow: 'hidden',
+      position: 'absolute',
+      background: '#E8E3DA',
+      transform: `rotate(${rotation}deg)`,
+      boxShadow: '0 20px 60px rgba(17,17,17,0.18)',
+      transition: 'transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275), box-shadow 0.3s',
+      ...style,
+    }}
+    onMouseEnter={e => { e.currentTarget.style.transform = `rotate(${rotation * 0.3}deg) translateY(-8px) scale(1.03)`; e.currentTarget.style.boxShadow = '0 30px 80px rgba(17,17,17,0.22)'; }}
+    onMouseLeave={e => { e.currentTarget.style.transform = `rotate(${rotation}deg)`; e.currentTarget.style.boxShadow = '0 20px 60px rgba(17,17,17,0.18)'; }}
+    >
+      <div style={{ position: 'absolute', top: 10, left: '50%', transform: 'translateX(-50%)', width: 48, height: 8, background: '#111', borderRadius: 100, zIndex: 2 }} />
+      <Illus />
+    </div>
+  );
+}
 
 export default function HeroSection() {
-  const [typed, setTyped] = useState('');
-  const roles = [
-    'Software Developer',
-    'Creative Strategist & Video Editor',
-    'Algorithm Decoder'
-  ];
-  const [roleIdx, setRoleIdx] = useState(0);
-  const [charIdx, setCharIdx] = useState(0);
-  const [deleting, setDeleting] = useState(false);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setVisible(true), 80); return () => clearTimeout(t); }, []);
 
-  useEffect(() => {
-    const current = roles[roleIdx];
-    const timeout = setTimeout(() => {
-      if (!deleting) {
-        setTyped(current.slice(0, charIdx + 1));
-        if (charIdx + 1 === current.length) {
-          setTimeout(() => setDeleting(true), 2000);
-        } else {
-          setCharIdx(charIdx + 1);
-        }
-      } else {
-        setTyped(current.slice(0, charIdx));
-        if (charIdx === 0) {
-          setDeleting(false);
-          setRoleIdx((roleIdx + 1) % roles.length);
-        } else {
-          setCharIdx(charIdx - 1);
-        }
-      }
-    }, deleting ? 40 : 80);
-    return () => clearTimeout(timeout);
-  }, [charIdx, deleting, roleIdx]);
+  const lines = siteConfig.heroHeadline;
 
   return (
-    <section id="hero" style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      position: 'relative', padding: '120px 40px 80px', overflow: 'hidden',
-    }}>
-      <div className="grid-bg" />
-      <div className="orb orb-cyan" style={{ width: 500, height: 500, top: '-10%', right: '-5%' }} />
-      <div className="orb orb-pink" style={{ width: 400, height: 400, bottom: '5%', left: '-10%' }} />
-      <div className="orb orb-purple" style={{ width: 350, height: 350, top: '40%', left: '50%' }} />
+    <section
+      id="hero"
+      style={{
+        minHeight: '100svh',
+        paddingTop: 'calc(var(--nav-h) + 56px)',
+        paddingBottom: 80,
+        display: 'flex',
+        alignItems: 'center',
+        background: 'var(--bg)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <div style={{ position: 'absolute', top: -60, right: -60, width: 320, height: 320, borderRadius: '50%', background: 'var(--accent)', opacity: 0.08, pointerEvents: 'none' }} aria-hidden="true" />
 
-      <div style={{ position: 'relative', zIndex: 2, maxWidth: 900, textAlign: 'center' }}>
-        {/* Status */}
-        <div className="animate-fade-up" style={{ marginBottom: 32 }}>
-          <div className="status-badge" style={{ margin: '0 auto' }}>
-            <div className="status-dot" />
-            available for work
+      <div className="container" style={{ width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 48 }}>
+
+          {/* Left — text */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            {/* Available badge */}
+            <div style={{ marginBottom: 28, opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(16px)', transition: 'opacity 0.5s, transform 0.5s' }}>
+              {siteConfig.availableForWork && (
+                <span className="status-badge">
+                  <span className="status-dot" />
+                  Available for Producer &amp; Strategist roles
+                </span>
+              )}
+            </div>
+
+            {/* Headline */}
+            <h1
+              className="display-xl"
+              style={{ marginBottom: 32, opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(24px)', transition: 'opacity 0.65s 0.1s, transform 0.65s 0.1s' }}
+            >
+              {lines.map((line, i) => (
+                <span key={i} style={{ display: 'block' }}>
+                  {i === 1 ? <><em className="accent">{line.split(' ')[0]}</em>{' ' + line.split(' ').slice(1).join(' ')}</> : line}
+                </span>
+              ))}
+            </h1>
+
+            {/* Sub */}
+            <p
+              className="body-lg"
+              style={{ maxWidth: 540, marginBottom: 20, opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(20px)', transition: 'opacity 0.65s 0.2s, transform 0.65s 0.2s' }}
+            >
+              {siteConfig.heroSub}
+            </p>
+
+            <p
+              style={{
+                fontSize: '15px',
+                color: 'var(--text-faint)',
+                maxWidth: 500,
+                marginBottom: 36,
+                lineHeight: 1.6,
+                opacity: visible ? 1 : 0,
+                transition: 'opacity 0.65s 0.25s',
+              }}
+            >
+              Behind the lens &amp; behind the strategy — not an on-screen influencer. I handle concept ideation, on-location shooting, framing, editing, and distribution.
+            </p>
+
+            {/* CTAs */}
+            <div
+              style={{ display: 'flex', gap: 14, flexWrap: 'wrap', opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(16px)', transition: 'opacity 0.65s 0.3s, transform 0.65s 0.3s' }}
+            >
+              <a href="#work" className="btn-primary">
+                View productions
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </a>
+              <a
+                href="/resume.pdf"
+                download="Ghanishtha_Kapoor_Resume.pdf"
+                className="btn-outline"
+              >
+                Download CV (PDF)
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v7M5 8l3 3 3-3M3 13h10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </a>
+            </div>
+          </div>
+
+          {/* Right — phones cluster */}
+          <div
+            className="phones-cluster"
+            aria-hidden="true"
+            style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.8s 0.3s' }}
+          >
+            <PhoneFrame
+              illustrationKey="freelancing"
+              rotation={-8}
+              style={{ left: 0, top: 20, zIndex: 3 }}
+            />
+            <PhoneFrame
+              illustrationKey="script"
+              rotation={4}
+              style={{ left: 100, top: 60, zIndex: 2 }}
+            />
+            <PhoneFrame
+              illustrationKey="relatable"
+              rotation={-3}
+              style={{ left: 200, top: 110, zIndex: 1 }}
+            />
           </div>
         </div>
+      </div>
 
-        {/* Greeting */}
-        <p className="font-mono animate-fade-up delay-100" style={{
-          fontSize: '0.9rem', color: 'var(--neon-cyan)', marginBottom: 16, letterSpacing: '0.05em', opacity: 0,
-        }}>
-          {' Hey, I\'m'}
-        </p>
-
-        {/* Name */}
-        <h1 className="font-display animate-fade-up delay-200" style={{
-          fontSize: 'clamp(3rem, 8vw, 6rem)', fontWeight: 800, lineHeight: 1,
-          letterSpacing: '-0.04em', marginBottom: 20, opacity: 0,
-        }}>
-          <span className="gradient-text">Ghanishtha</span>{' '}
-          <span style={{ color: '#fff' }}>Kapoor</span>
-        </h1>
-
-        {/* Typing Role */}
-        <div className="font-mono animate-fade-up delay-300" style={{
-          fontSize: 'clamp(1rem, 2vw, 1.3rem)', color: 'rgba(255,255,255,0.6)',
-          marginBottom: 32, height: 36, opacity: 0,
-        }}>
-          <span style={{ color: 'var(--neon-purple)' }}>const</span>{' '}
-          <span style={{ color: 'var(--neon-lime)' }}>role</span>{' '}
-          <span style={{ color: 'var(--neon-pink)' }}>=</span>{' '}
-          <span style={{ color: 'var(--neon-orange)' }}>&quot;{typed}</span>
-          <span className="cursor-blink" style={{ color: 'var(--neon-cyan)' }}>|</span>
-          <span style={{ color: 'var(--neon-orange)' }}>&quot;</span>
-        </div>
-
-        {/* Bio */}
-        <div className="animate-fade-up delay-400" style={{
-          fontSize: 'clamp(0.95rem, 1.5vw, 1.1rem)', color: 'rgba(255,255,255,0.5)',
-          lineHeight: 1.7, maxWidth: 700, margin: '0 auto 40px', opacity: 0,
-        }}>
-          <p style={{ marginBottom: '1rem' }}>
-            I use my engineering brain to <span style={{ color: 'var(--neon-cyan)', fontWeight: 800 }}>decode the algorithm</span> — a total win-win situation. Slayyy.
-          </p>
-          <p style={{ marginBottom: '1rem' }}>
-            I don’t just follow trends. I analyze them with a technical lens to build hooks, shape narratives, and engineer attention.
-          </p>
-          <p>
-            Content that works — <span style={{ color: 'var(--neon-pink)', fontStyle: 'italic' }}>engineered for the viral loop.</span>
-          </p>
-        </div>
-
-        {/* CTAs */}
-        <div className="animate-fade-up delay-500" style={{
-          display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap', opacity: 0,
-        }}>
-          <a href="#projects" className="btn-solid">
-            View My Work ↗
-          </a>
-          <a href="#contact" className="btn-neon">
-            <span>Get in Touch</span>
-          </a>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="animate-fade-up delay-700" style={{
-          marginTop: 80, opacity: 0, display: 'flex', flexDirection: 'column',
-          alignItems: 'center', gap: 8,
-        }}>
-          <span className="font-mono" style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', letterSpacing: '0.15em' }}>
-            SCROLL DOWN
-          </span>
-          <div style={{
-            width: 20, height: 34, border: '1.5px solid rgba(255,255,255,0.2)',
-            borderRadius: 12, display: 'flex', justifyContent: 'center', paddingTop: 6,
-          }}>
-            <div style={{
-              width: 3, height: 8, borderRadius: 3,
-              background: 'var(--neon-cyan)', animation: 'fadeInUp 1.5s ease-in-out infinite',
-            }} />
-          </div>
-        </div>
+      {/* Scroll hint */}
+      <div
+        style={{ position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)', opacity: 0.35, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}
+        aria-hidden="true"
+      >
+        <span style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase' }}>Scroll</span>
+        <svg width="1" height="40" viewBox="0 0 1 40"><line x1="0.5" y1="0" x2="0.5" y2="40" stroke="#111" strokeWidth="1" strokeDasharray="3 4"/></svg>
       </div>
     </section>
   );

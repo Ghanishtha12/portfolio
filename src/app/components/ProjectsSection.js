@@ -1,125 +1,252 @@
 'use client';
+import { useState, useEffect, useRef } from 'react';
+import { projects } from '@/data/portfolio';
+import IllustrationFreelancing from './illustrations/IllustrationFreelancing';
+import IllustrationScript from './illustrations/IllustrationScript';
+import IllustrationRelatable from './illustrations/IllustrationRelatable';
+
+const illusMap = {
+  freelancing: IllustrationFreelancing,
+  script: IllustrationScript,
+  relatable: IllustrationRelatable,
+};
 
 export default function ProjectsSection() {
-  const projects = [
-    {
-      id: "01",
-      title: "Viral Freelancing Reel",
-      desc: "Relatable storytelling reel built around freelancer expectations vs reality. Focused on strong hook, meme timing, and retention loops. \n\n → Reached 225K+ organic views",
-      tags: ["Reels", "Storytelling", "Meme"],
-      color: "var(--neon-cyan)",
-      image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
-      btnText: "View Reel",
-      link: "https://www.instagram.com/reel/DWEA_UWEUI-/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
-    },
-    {
-      id: "02",
-      title: "Script-Based Engagement Reel",
-      desc: "Script-driven reel designed to hold attention till payoff. Balanced storytelling with meme pacing for higher retention.",
-      tags: ["Script", "Narrative", "Hooks"],
-      color: "var(--neon-pink)",
-      image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80",
-      btnText: "View Reel",
-      link: "https://www.instagram.com/reel/DTz3M_5kYuB/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
-    },
-    {
-      id: "03",
-      title: "Relatable Content Reel",
-      desc: "Audience-first content designed to trigger “this is so me” reactions. Optimized for engagement, shares, and rewatchability.",
-      tags: ["POV", "Relatable", "Social"],
-      color: "var(--neon-lime)",
-      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=800&q=80",
-      btnText: "View Reel",
-      link: "https://www.instagram.com/reel/DVLJsp7kbyp/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
-    }
-  ];
+  const [activeModal, setActiveModal] = useState(null);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const els = ref.current?.querySelectorAll('.reveal');
+    if (!els) return;
+    const obs = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.1 }
+    );
+    els.forEach(el => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
 
   return (
-    <section id="projects" style={{ padding: '80px 40px', position: 'relative' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div style={{ marginBottom: 50 }}>
-          <span className="section-label" style={{ marginBottom: 12 }}>Featured Work</span>
-          <h2 className="font-display" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 800, letterSpacing: '-0.04em' }}>
-            Content that <span className="gradient-text">stops the scroll.</span>
+    <section id="work" className="section" ref={ref} style={{ background: 'var(--bg)' }}>
+      <div className="container">
+        <div style={{ marginBottom: 64 }}>
+          <span className="section-label reveal">Selected Work</span>
+          <h2 className="display-lg reveal" style={{ marginTop: 8 }}>
+            Content that <em className="accent">earns</em> attention.
           </h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 60 }}>
-          {projects.map((project, idx) => (
-            <div key={idx} className="glass-card" style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-              overflow: 'hidden',
-              minHeight: 450
-            }}>
-              {/* Project Image/Preview */}
-              <div style={{ 
-                position: 'relative', 
-                background: `linear-gradient(135deg, ${project.color}22, var(--dark-bg))`,
-                overflow: 'hidden'
-              }}>
-                <div className="project-number">{project.id}</div>
-                <div style={{ 
-                  position: 'absolute', 
-                  inset: 0, 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  padding: 40
-                }}>
-                  <div style={{ 
-                    width: '100%', 
-                    height: '100%', 
-                    borderRadius: 12,
-                    backgroundImage: `url(${project.image})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 20px ${project.color}33`,
-                    transform: 'perspective(1000px) rotateY(-5deg) rotateX(5deg)',
-                    transition: 'transform 0.5s ease'
-                  }} className="project-img" />
+        {/* Full-width alternating rows */}
+        <div style={{ borderBottom: '1px solid rgba(17,17,17,0.12)' }}>
+          {projects.map((proj, idx) => {
+            const isReversed = idx % 2 === 1;
+            const Illus = illusMap[proj.illustrationKey] || IllustrationFreelancing;
+
+            return (
+              <div
+                key={proj.id}
+                className={`work-row reveal ${isReversed ? 'reversed' : ''}`}
+                style={{ padding: '72px 0', alignItems: 'center' }}
+              >
+                {/* Visual / Phone Mockup */}
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '24px' }}>
+                  <div
+                    className="phone-frame"
+                    style={{
+                      transform: isReversed ? 'rotate(2deg)' : 'rotate(-2deg)',
+                      transition: 'transform 0.4s ease, box-shadow 0.4s ease',
+                      boxShadow: '0 24px 60px rgba(17,17,17,0.12)',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03) rotate(0deg)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = isReversed ? 'rotate(2deg)' : 'rotate(-2deg)'}
+                  >
+                    <div className="phone-notch" />
+                    <Illus />
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div style={{ padding: '24px 48px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '28px', fontWeight: 800, color: 'var(--accent)' }}>
+                      /{proj.id}
+                    </span>
+                    <span style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-faint)' }}>
+                      {proj.platform} · {proj.format}
+                    </span>
+                  </div>
+
+                  <h3 className="display-md" style={{ color: 'var(--text)' }}>
+                    {proj.title}
+                  </h3>
+
+                  <p className="body-lg" style={{ maxWidth: 520 }}>
+                    {proj.desc}
+                  </p>
+
+                  {proj.result && (
+                    <div style={{ margin: '8px 0', display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                      <span style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 800, color: 'var(--text)', lineHeight: 1 }}>
+                        {proj.result}
+                      </span>
+                      <span style={{ fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--accent)' }}>
+                        {proj.resultLabel}
+                      </span>
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', gap: 16, marginTop: 12, flexWrap: 'wrap' }}>
+                    <a
+                      href={proj.reelLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-primary"
+                    >
+                      Watch Reel ↗
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setActiveModal(proj)}
+                      className="btn-outline"
+                    >
+                      Case Study
+                    </button>
+                  </div>
                 </div>
               </div>
+            );
+          })}
+        </div>
+      </div>
 
-              {/* Project Info */}
-              <div style={{ padding: 60, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
-                  {project.tags.map((tag, tIdx) => (
-                    <span key={tIdx} className="skill-tag" style={{ fontSize: '0.7rem' }}>{tag}</span>
-                  ))}
-                </div>
-                
-                <h3 className="font-display" style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: 20 }}>
-                  {project.title}
-                </h3>
-                
-                <p style={{ color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, marginBottom: 40, fontSize: '1.05rem', whiteSpace: 'pre-line' }}>
-                  {project.desc}
+      {/* Case Study Modal Drawer */}
+      {activeModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(17,17,17,0.7)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 300,
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}
+          onClick={() => setActiveModal(null)}
+        >
+          <div
+            style={{
+              width: '100%',
+              maxWidth: '680px',
+              height: '100%',
+              background: '#F5F2EC',
+              padding: 'clamp(32px, 5vw, 64px)',
+              overflowY: 'auto',
+              boxShadow: '-10px 0 50px rgba(0,0,0,0.25)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 32,
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '12px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)' }}>
+                Case Study /{activeModal.id}
+              </span>
+              <button
+                type="button"
+                onClick={() => setActiveModal(null)}
+                style={{
+                  background: 'none',
+                  border: '1px solid rgba(17,17,17,0.2)',
+                  borderRadius: '50%',
+                  width: 36,
+                  height: 36,
+                  fontSize: 16,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <h3 className="display-md" style={{ lineHeight: 1.1 }}>
+              {activeModal.title}
+            </h3>
+
+            <div className="divider" />
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+              <div>
+                <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 8 }}>
+                  01. Goal
                 </p>
+                <p className="body-lg" style={{ color: 'var(--text)' }}>
+                  {activeModal.caseStudy.goal}
+                </p>
+              </div>
 
-                <div style={{ display: 'flex', gap: 20 }}>
-                  <a href={project.link} target="_blank" rel="noopener noreferrer" className="btn-solid" style={{ padding: '12px 24px' }}>{project.btnText}</a>
-                  <a href="#" className="social-icon" style={{ width: 48, height: 48 }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.28 1.15-.28 2.35 0 3.5-1 1.25-1.25 2.5-1 3.5 0 3.5 3 5.5 6 5.5-.61 1.25-.97 2.4-1 3.5V22"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
-                  </a>
+              <div>
+                <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 8 }}>
+                  02. Strategy &amp; Hook
+                </p>
+                <p className="body-lg" style={{ color: 'var(--text)' }}>
+                  {activeModal.caseStudy.strategy}
+                </p>
+              </div>
+
+              <div>
+                <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 8 }}>
+                  03. Execution
+                </p>
+                <p className="body-lg" style={{ color: 'var(--text)' }}>
+                  {activeModal.caseStudy.execution}
+                </p>
+              </div>
+
+              {activeModal.caseStudy.results && activeModal.caseStudy.results.length > 0 && (
+                <div>
+                  <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 8 }}>
+                    04. Results
+                  </p>
+                  <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginTop: 8 }}>
+                    {activeModal.caseStudy.results.map((r, i) => (
+                      <div key={i} style={{ borderLeft: '2px solid var(--accent)', paddingLeft: 12 }}>
+                        <div style={{ fontSize: '28px', fontWeight: 800, fontFamily: 'var(--font-display)' }}>{r.value}</div>
+                        <div style={{ fontSize: '12px', color: 'var(--text-faint)', textTransform: 'uppercase' }}>{r.label}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+              )}
+
+              <div>
+                <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 8 }}>
+                  05. Learnings
+                </p>
+                <p className="body-lg" style={{ color: 'var(--text)' }}>
+                  {activeModal.caseStudy.learnings}
+                </p>
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* <div style={{ marginTop: 80, textAlign: 'center' }}>
-          <a href="#" className="btn-neon">
-            <span>View All Projects 🔥</span>
-          </a>
-        </div> */}
-      </div>
-      
-      <style jsx>{`
-        .glass-card:hover .project-img {
-          transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.05);
-        }
-      `}</style>
+            <div style={{ marginTop: 'auto', paddingTop: 24 }}>
+              <a
+                href={activeModal.reelLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+                style={{ width: '100%', justifyContent: 'center' }}
+              >
+                Watch Reel on Instagram ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
